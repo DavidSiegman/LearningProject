@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <stdlib.h>
 
+#include "LinkedListClass/nodeclass.h"
 #include "LinkedListClass/linkedlistclass.h"
 
 using namespace std;
@@ -10,41 +11,31 @@ using namespace std;
 int main(int argc, char *argv[]){
     QCoreApplication a(argc, argv);
 
-    char str[100] = {0};
-
-    LinkedListClass<int>    *iLList =
-            new LinkedListClass<int>();
-    if (iLList->isEmpty()){
-        cout << "iLList is empty" << endl;
-    }else{cout << "iLList isn't empty" << endl;}
-    iLList->insertFirst(1,10);
-    iLList->insertFirst(2,11);
-    iLList->insertFirst(3,20);
-    iLList->deleteFirst();
-    iLList->deleteFirst();
-    iLList->printList();
-    if (iLList->isEmpty()){
-        cout << "iLList is empty" << endl;
-    }else{cout << "iLList isn't empty" << endl;}
+    char str[5][100] = {0};
 
     LinkedListClass<char*>  *sLList =
             new LinkedListClass<char*>();
-    strcpy(str,"String10");
-    sLList->insertFirst(1,str);
-    strcpy(str,"String11");
-    sLList->insertFirst(2,str);
-    strcpy(str,"String20");
-    sLList->insertFirst(3,str);
-    iLList->deleteFirst();
-    sLList->printList();
+    strcpy(str[0],"String1");
+    sLList->insertOnTop(1,str[0]);
+    strcpy(str[1],"String2");
+    sLList->insertOnTop(2,str[1]);
+    strcpy(str[2],"String3");
+    sLList->insertOnTop(3,str[2]);
+    strcpy(str[3],"String4");
+    sLList->insertOnTop(4,str[3]);
+    strcpy(str[4],"String5");
+    sLList->insertOnTop(5,str[4]);
+    sLList->deleteTopNode();
+    //sLList->printList();
 
-    LinkedListClass<double>  *dLList =
-            new LinkedListClass<double>();
-    dLList->insertFirst(1,0.01);
-    dLList->insertFirst(2,4.11);
-    dLList->insertFirst(3,100.78);
-    dLList->deleteFirst();
-    dLList->printList();
+    NodeClass<char*> *node = NULL;
+    node = sLList->findNode(4);
+    if (node != NULL){
+        cout << "Node found - ";
+        node->PrintNode();
+    }else {
+        cout << "Node not found" << endl;
+    }
 
     return a.exec();
 }
