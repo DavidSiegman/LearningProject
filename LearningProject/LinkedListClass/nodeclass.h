@@ -2,8 +2,10 @@
 #define NODECLASS_H
 
 #include <iostream>
-#include <cstdlib>
-#include <stdlib.h>
+#include <stdio.h>
+//#include <stdlib.h>
+//#include <cstdlib>
+#include <string.h>
 
 using namespace std;
 // ====================================================
@@ -18,7 +20,10 @@ public:
     NodeClass(int, T, NodeClass<T>*);
     ~NodeClass();
     void PrintNode();
-    int getKey();
+    T getData(void);
+    void setData(T);
+    int getKey(void);
+    void setKey(int);
     void setPtrNext(NodeClass<T>*);
     NodeClass<T>* getPtrNext();
 private:
@@ -40,10 +45,28 @@ NodeClass<T>::NodeClass(int key, T data,
 template <typename T>
 NodeClass<T>::~NodeClass(){}
 // ====================================================
+// Get the node data ===================================
+template <typename T>
+T NodeClass<T>::getData(){
+    return this->data;
+}
+// ====================================================
+// Set the node data ===================================
+template <typename T>
+void NodeClass<T>::setData(T new_data){
+    this->data = new_data;
+}
+// ====================================================
 // Get the node key ===================================
 template <typename T>
 int NodeClass<T>::getKey(){
     return this->key;
+}
+// ====================================================
+// Set the node key ===================================
+template <typename T>
+void NodeClass<T>::setKey(int new_key){
+    this->key = new_key;
 }
 // ====================================================
 // Get pointer to next node ===========================

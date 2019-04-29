@@ -10,7 +10,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
+    SortingConditions/sortingconditions.cpp
 
 HEADERS += \
     LinkedListClass/linkedlistclass.h \
-    LinkedListClass/nodeclass.h
+    LinkedListClass/nodeclass.h \
+    SortingConditions/sortingconditions.h
