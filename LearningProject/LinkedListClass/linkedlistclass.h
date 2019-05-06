@@ -24,8 +24,11 @@ public:
     NodeClass<T> deleteTopNode();
     bool deleteNode(int key);
     NodeClass<T>* findNode(int key);
-    void BubbleShort(bool (*SortingCondition)
-                     (T preNodeData,T currNodeData));
+    void BubbleSort(bool (*SortingCondition)
+                   (T preNodeData,T currNodeData));
+    void SelectionSort(bool (*SortingCondition)
+                   (T preNodeData,T currNodeData));
+
 private:
     NodeClass<T> *head;
 };
@@ -128,11 +131,11 @@ void LinkedListClass<T>::printList(){
    }
 }
 // ====================================================
-// Bubble Short sorting algorithm =====================
+// Bubble Sort sorting algorithm ======================
 template <typename T>
-void LinkedListClass<T>::BubbleShort(
-    bool (*SortingCondition)(T preNodeData,
-                             T currNodeData)){
+void LinkedListClass<T>::BubbleSort(
+    bool (*const SortingCondition)(T preNodeData,
+                                   T currNodeData)){
     int i, j, k, tempKey;
     T tempData;
     NodeClass<T> *current;
@@ -141,7 +144,7 @@ void LinkedListClass<T>::BubbleShort(
     int size = this->length();
     k = size;
 
-    for ( i = 0 ; i < size - 1 ; i++, k-- ){
+    for (i = 0 ; i < size - 1 ; i++, k--){
         current = this->head;
         next = this->head->getPtrNext();
         for ( j = 1 ; j < k ; j++ ){
@@ -159,5 +162,44 @@ void LinkedListClass<T>::BubbleShort(
         }
     }
 }
+// ====================================================
+// Selection Sort sorting algorithm ===================
+template<typename T>
+void LinkedListClass<T>::SelectionSort(
+        bool (*const SortingCondition)(T preNodeData,
+                                       T currNodeData)) {
+    int i, tempKey;
+    T             tempData;
+    NodeClass<T> *UnsortedArea;
+    NodeClass<T> *Current;
+    NodeClass<T> *Minimum;
 
+    int size = this->length();
+
+    UnsortedArea = this->head;
+    Minimum = UnsortedArea;
+    Current = UnsortedArea;
+
+    for (i = 0 ; i < size; i++) {
+        while(Current != NULL) {
+            if (SortingCondition(Minimum->getData(),
+                                 Current->getData())) {
+                Minimum = Current;
+            }
+            Current = Current->getPtrNext();
+        }
+        if (Minimum != UnsortedArea) {
+            tempData = Minimum->getData();
+            Minimum->setData(UnsortedArea->getData());
+            UnsortedArea->setData(tempData);
+
+            tempKey = Minimum->getKey();
+            Minimum->setKey(UnsortedArea->getKey());
+            UnsortedArea->setKey(tempKey);
+        }
+        UnsortedArea = UnsortedArea->getPtrNext();
+        Current = UnsortedArea;
+        Minimum = UnsortedArea;
+    }
+}
 #endif // LINKEDLISTCLASS_H

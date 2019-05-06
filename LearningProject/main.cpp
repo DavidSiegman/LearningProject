@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     sLList->deleteNode(3);
     cout << "\r\nUnsorted List =======================" << endl;
     sLList->printList();
-    sLList->BubbleShort(&AlphaBethSorting);
+    sLList->SelectionSort(&AlphaBethSorting);
     cout << "\r\nAlphabetically Sorted List ==========" << endl;
     sLList->printList();
 
