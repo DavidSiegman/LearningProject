@@ -14,30 +14,50 @@ int main(int argc, char *argv[]){
     LinkedListClass<char*>  *sLList =
             new LinkedListClass<char*>();
     strcpy(str[0],"Ivan");
-    sLList->insertOnTop(1,str[0]);
+    sLList->insertToTail(1,str[0]);
     strcpy(str[1],"Yuriy");
-    sLList->insertOnTop(2,str[1]);
+    sLList->insertToTail(2,str[1]);
     strcpy(str[2],"Maxim");
-    sLList->insertOnTop(3,str[2]);
+    sLList->insertToTail(3,str[2]);
     strcpy(str[3],"Alexandr");
-    sLList->insertOnTop(4,str[3]);
+    sLList->insertToTail(4,str[3]);
     strcpy(str[4],"Boris");
-    sLList->insertOnTop(5,str[4]);
+    sLList->insertToTail(5,str[4]);
     strcpy(str[5],"Andrey");
-    sLList->insertOnTop(6,str[5]);
+    sLList->insertToTail(6,str[5]);
     strcpy(str[6],"Ilya");
-    sLList->insertOnTop(7,str[6]);
+    sLList->insertToTail(7,str[6]);
     strcpy(str[7],"Mihail");
-    sLList->insertOnTop(8,str[7]);
+    sLList->insertToTail(8,str[7]);
     strcpy(str[8],"Marat");
-    sLList->insertOnTop(9,str[8]);
+    sLList->insertToTail(9,str[8]);
     strcpy(str[9],"Semyon");
-    sLList->insertOnTop(10,str[9]);
-    sLList->deleteNode(3);
+    sLList->insertToTail(10,str[9]);
+    strcpy(str[10],"Dmitriy");
+    sLList->insertToHead(0,str[10]);
+
+    NodeClass<char*> *deleted_node = new NodeClass<char*> (0, NULL, NULL);
+
+    *deleted_node = sLList->deleteNode(100);
+    if (deleted_node->getData() != NULL){
+        cout << "\r\nDeleted Node - ";
+        deleted_node->PrintNode();
+    }
+    delete deleted_node;
+
     cout << "\r\nUnsorted List =======================" << endl;
     sLList->printList();
-    sLList->SelectionSort(&AlphaBethSorting);
-    cout << "\r\nAlphabetically Sorted List ==========" << endl;
+
+    sLList->BubbleSort(&AlphaBethSorting);
+    cout << "\r\nAlphabetically Sorted List with sorted by BubbleSort==========" << endl;
+    sLList->printList();
+
+    sLList->SelectionSort(&iAlphaBethSorting);
+    cout << "\r\nInverse Alphabetically Sorted List with sorted by SelectionSort==========" << endl;
+    sLList->printList();
+
+    sLList->InsertionSort(&AlphaBethSorting);
+    cout << "\r\nAlphabetically Sorted List with sorted by InsertionSort==========" << endl;
     sLList->printList();
 
     NodeClass<char*> *node = NULL;

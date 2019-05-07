@@ -84,17 +84,17 @@ void NodeClass<T>::setPtrNext(NodeClass<T>* new_next){
 // Display the node ===================================
 template <typename T>
 void NodeClass<T>::PrintNode(){
-    printf("Node.Key %d, Node.Data %d\r\n",
+    printf("Key: %d, Data: %d",
            this->key,this->data);
 }
 template <>
 void NodeClass<double>::PrintNode(){
-    printf("Node.Key %d, Node.Data %2.2f\r\n",
+    printf("Key: %d, Data %2.2f",
            this->key,this->data);
 }
 template <>
 void NodeClass<char*>::PrintNode(){
-    printf("Node.Key %d, Node.Data %s\r\n",
+    printf("Key: %d, Data: %s",
            this->key,this->data);
 }
 

@@ -18,72 +18,146 @@ class LinkedListClass{
 public:
     LinkedListClass();
     void printList();
-    void insertOnTop(int,T);
+    void insertToHead(int,T);
+    void insertToTail(int,T);
     bool isEmpty();
     int length();
-    NodeClass<T> deleteTopNode();
-    bool deleteNode(int key);
+    NodeClass<T> deleteFromHead();
+    NodeClass<T> deleteFromTail();
+    NodeClass<T> deleteNode(int key);
     NodeClass<T>* findNode(int key);
+
     void BubbleSort(bool (*SortingCondition)
                    (T preNodeData,T currNodeData));
     void SelectionSort(bool (*SortingCondition)
                    (T preNodeData,T currNodeData));
+    void InsertionSort(bool (*SortingCondition)
+                   (T preNodeData,T currNodeData));
 
 private:
     NodeClass<T> *head;
+    NodeClass<T> *tail;
 };
 // ====================================================
 // Linked List Class constructor ======================
 template <typename T>
 LinkedListClass<T>::LinkedListClass(){
     this->head    = NULL;
+    this->tail    = NULL;
 }
 // ====================================================
-// Insert node on top =================================
+// Insert node to head ================================
 template <typename T>
-void LinkedListClass<T>::insertOnTop(int key,
-                                     T data){
+void LinkedListClass<T>::insertToHead(int key,
+                                      T data){
     NodeClass<T> *NewNode =
             new NodeClass<T>(key,data,this->head);
     this->head = NewNode;
+    if (length() == 1){
+       this->tail = this->head;
+    }
 }
 // ====================================================
-// Delete top node ====================================
+// Insert node to tail ================================
 template <typename T>
-NodeClass<T> LinkedListClass<T>::deleteTopNode(){
-    NodeClass<T> tempNode = *this->head;
-    delete this->head;
-    this->head = tempNode.getPtrNext();
-    return tempNode;
+void LinkedListClass<T>::insertToTail(int key,
+                                      T data){
+    NodeClass<T> *NewNode =
+            new NodeClass<T>(key,data,NULL);
+    if (this->tail != NULL){
+        this->tail->setPtrNext(NewNode);
+    }
+    this->tail = NewNode;
+    if (this->head == NULL){
+       this->head = this->tail;
+    }
+}
+// ====================================================
+// Delete node from head ==============================
+template <typename T>
+NodeClass<T> LinkedListClass<T>::deleteFromHead(){
+    try{
+        if (this->head == NULL){
+          throw 0;
+        }
+        NodeClass<T> tempNode = *this->head;
+        delete this->head;
+        if (tempNode.getPtrNext() != NULL){
+            this->head = tempNode.getPtrNext();
+        }else{
+            this->head = NULL;
+            this->tail = NULL;
+        }
+        return tempNode;
+    }catch(int x) {
+        cout << "\r\nDelete error: head pointer is NULL" << endl;
+    }
+}
+// ====================================================
+// Delete node from tail ==============================
+template <typename T>
+NodeClass<T> LinkedListClass<T>::deleteFromTail(){
+    try{
+        if (this->tail == NULL){
+          throw 0;
+        }
+        NodeClass<T> tempNode = *this->tail;
+        NodeClass<T> *preTail = this->head;
+
+        int size = this->length();
+        if (size > 1){
+            for(int i = 0; i < size-2; i++){
+                preTail = preTail->getPtrNext();
+            }
+        }
+        if (preTail->getPtrNext() != NULL){
+            preTail->setPtrNext(NULL);
+        }else{
+            preTail = NULL;
+            this->head = NULL;
+        }
+        delete this->tail;
+        this->tail = preTail;
+        return tempNode;
+    }catch(int x) {
+        cout << "\r\nDelete error: tail pointer is NULL" << endl;
+    }
 }
 // ====================================================
 // Delete node by the key =============================
 template <typename T>
-bool LinkedListClass<T>::deleteNode(int key){
-    bool result = false;
-    if(this->head == NULL) {
-       return result;
+NodeClass<T> LinkedListClass<T>::deleteNode(int key){
+    try{
+        if(this->head == NULL) {
+           throw 0;
+        }
+        NodeClass<T> *current = this->head;
+        NodeClass<T> *previous = NULL;
+        while(current->getKey() != key){
+           if(current->getPtrNext() == NULL){
+              throw 1;
+           } else {
+               previous = current;
+               current = current->getPtrNext();
+           }
+        }
+        NodeClass<T> result = *current;
+        if (current == this->head){
+            this->head = this->head->getPtrNext();
+            delete current;
+        }else{
+            previous->setPtrNext(current->getPtrNext());
+            delete current;
+        }
+        return result;
+    }catch(int x) {
+        if (x == 0){
+            cout << "\r\nDelete error: head pointer is NULL" << endl;
+        }
+        if (x == 1){
+            cout << "\r\nDelete error: key wasn't found" << endl;
+        }
     }
-    NodeClass<T> *current = this->head;
-    NodeClass<T> *previous = NULL;
-    while(current->getKey() != key){
-       if(current->getPtrNext() == NULL){
-          return result;
-       } else {
-           previous = current;
-           current = current->getPtrNext();
-       }
-    }
-    if (current == this->head){
-        this->head = this->head->getPtrNext();
-        delete current;
-        result = true;
-    }else{
-        previous->setPtrNext(current->getPtrNext());
-        delete current;
-        result = true;
-    }
-    return result;
 }
 // ====================================================
 // Check empty state ==================================
@@ -125,8 +199,18 @@ NodeClass<T>* LinkedListClass<T>::findNode(int key){
 template <typename T>
 void LinkedListClass<T>::printList(){
    NodeClass<T> *ptr = this->head;
+   int number = 0;
    while(ptr != NULL){
+      cout << "No.: " << number << " ";
+      number++;
       ptr->PrintNode();
+      if (ptr == this->head){
+          cout << " - head";
+      }
+      if (ptr == this->tail){
+          cout << " - tail";
+      }
+      cout << "\r\n";
       ptr = ptr->getPtrNext();
    }
 }
@@ -136,29 +220,38 @@ template <typename T>
 void LinkedListClass<T>::BubbleSort(
     bool (*const SortingCondition)(T preNodeData,
                                    T currNodeData)){
-    int i, j, k, tempKey;
-    T tempData;
-    NodeClass<T> *current;
-    NodeClass<T> *next;
+    try{
+        if(this->head == NULL) {
+           throw 0;
+        }
+        int i, j, k, tempKey;
+        T tempData;
+        NodeClass<T> *current;
+        NodeClass<T> *next;
 
-    int size = this->length();
-    k = size;
+        int size = this->length();
+        k = size;
 
-    for (i = 0 ; i < size - 1 ; i++, k--){
-        current = this->head;
-        next = this->head->getPtrNext();
-        for ( j = 1 ; j < k ; j++ ){
-            if(SortingCondition(current->getData(),next->getData())){
-                tempData = current->getData();
-                current->setData(next->getData());
-                next->setData(tempData);
-
-                tempKey = current->getKey();
-                current->setKey(next->getKey());
-                next->setKey(tempKey);
+        for (i = 0 ; i < size - 1 ; i++, k--){
+            current = this->head;
+            next = this->head->getPtrNext();
+            for ( j = 1 ; j < k ; j++ ){
+                if(SortingCondition(current->getData(),
+                                    next->getData())){
+                    tempData = current->getData();
+                    current->setData(next->getData());
+                    next->setData(tempData);
+                    tempKey = current->getKey();
+                    current->setKey(next->getKey());
+                    next->setKey(tempKey);
+                }
+                current = current->getPtrNext();
+                next = next->getPtrNext();
             }
-            current = current->getPtrNext();
-            next = next->getPtrNext();
+        }
+    }catch(int x) {
+        if (x == 0){
+            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
         }
     }
 }
@@ -166,40 +259,105 @@ void LinkedListClass<T>::BubbleSort(
 // Selection Sort sorting algorithm ===================
 template<typename T>
 void LinkedListClass<T>::SelectionSort(
-        bool (*const SortingCondition)(T preNodeData,
-                                       T currNodeData)) {
-    int i, tempKey;
-    T             tempData;
-    NodeClass<T> *UnsortedArea;
-    NodeClass<T> *Current;
-    NodeClass<T> *Minimum;
-
-    int size = this->length();
-
-    UnsortedArea = this->head;
-    Minimum = UnsortedArea;
-    Current = UnsortedArea;
-
-    for (i = 0 ; i < size; i++) {
-        while(Current != NULL) {
-            if (SortingCondition(Minimum->getData(),
-                                 Current->getData())) {
-                Minimum = Current;
-            }
-            Current = Current->getPtrNext();
+    bool (*const SortingCondition)(T preNodeData,
+                                   T currNodeData)){
+    try{
+        if(this->head == NULL) {
+           throw 0;
         }
-        if (Minimum != UnsortedArea) {
-            tempData = Minimum->getData();
-            Minimum->setData(UnsortedArea->getData());
-            UnsortedArea->setData(tempData);
+        int i, tempKey;
+        T             tempData;
+        NodeClass<T> *UnsortedArea;
+        NodeClass<T> *Current;
+        NodeClass<T> *Minimum;
 
-            tempKey = Minimum->getKey();
-            Minimum->setKey(UnsortedArea->getKey());
-            UnsortedArea->setKey(tempKey);
-        }
-        UnsortedArea = UnsortedArea->getPtrNext();
-        Current = UnsortedArea;
+        int size = this->length();
+
+        UnsortedArea = this->head;
         Minimum = UnsortedArea;
+        Current = UnsortedArea;
+
+        for (i = 0 ; i < size; i++) {
+            while(Current != NULL) {
+                if (SortingCondition(Minimum->getData(),
+                                     Current->getData())) {
+                    Minimum = Current;
+                }
+                Current = Current->getPtrNext();
+            }
+            if (Minimum != UnsortedArea) {
+                tempData = Minimum->getData();
+                Minimum->setData(UnsortedArea->getData());
+                UnsortedArea->setData(tempData);
+                tempKey = Minimum->getKey();
+                Minimum->setKey(UnsortedArea->getKey());
+                UnsortedArea->setKey(tempKey);
+            }
+            UnsortedArea = UnsortedArea->getPtrNext();
+            Current = UnsortedArea;
+            Minimum = UnsortedArea;
+        }
+    }catch(int x) {
+        if (x == 0){
+            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
+        }
     }
 }
+// ====================================================
+// Insertion Sort sorting algorithm ===================
+template<typename T>
+void LinkedListClass<T>::InsertionSort(
+    bool (*const SortingCondition)(T preNodeData,
+                                   T currNodeData)){
+    try{
+        if(this->head == NULL) {
+           throw 0;
+        }
+        int i, tempKey;
+        T             tempData;
+        NodeClass<T> *SortedAreaTail   = this->head;
+
+        int size = this->length();
+        int sorted_nodes   = 1;
+        int unsorted_nodes = size;
+
+        while(SortedAreaTail->getPtrNext() != NULL){
+
+            NodeClass<T> *preSortedCurrent = this->head;
+            NodeClass<T> *SortedCurrent    = this->head;
+            NodeClass<T> *Current = SortedAreaTail->getPtrNext();
+
+            for(i = 0; i < sorted_nodes; i++){
+                if(SortingCondition(SortedCurrent->getData(),
+                                    Current->getData())){
+                    SortedAreaTail->setPtrNext(Current->getPtrNext());
+                    if (SortedCurrent != this->head){
+                        preSortedCurrent->setPtrNext(Current);
+                        Current->setPtrNext(SortedCurrent);
+                    }else{
+                        this->head = Current;
+                        Current->setPtrNext(SortedCurrent);
+                    }
+                    break;
+                }else{
+                    if(SortedCurrent == SortedAreaTail){
+                      SortedAreaTail = Current;
+                    }else{
+                      preSortedCurrent = SortedCurrent;
+                      SortedCurrent = SortedCurrent->getPtrNext();
+                    }
+                }
+            }
+            sorted_nodes++;
+            unsorted_nodes--;
+        }
+
+
+    }catch(int x) {
+        if (x == 0){
+            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
+        }
+    }
+}
+
 #endif // LINKEDLISTCLASS_H
