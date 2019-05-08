@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 
-#include "LinkedListClass/nodeclass.h"
+#include "DoubleLinkedListClass/dllnodeclass.h"
+//#include "LinkedListClass/nodeclass.h"
 #include "LinkedListClass/linkedlistclass.h"
 #include "SortingConditions/sortingconditions.h"
 
@@ -36,38 +37,40 @@ int main(int argc, char *argv[]){
     strcpy(str[10],"Dmitriy");
     sLList->insertToHead(0,str[10]);
 
-    NodeClass<char*> *deleted_node = new NodeClass<char*> (0, NULL, NULL);
-
-    *deleted_node = sLList->deleteNode(100);
-    if (deleted_node->getData() != NULL){
+    NodeClass<char*> deleted_node = sLList->deleteNode(3);
+    if (deleted_node.getData() != NULL){
         cout << "\r\nDeleted Node - ";
-        deleted_node->PrintNode();
+        deleted_node.PrintNode();
     }
-    delete deleted_node;
+    delete &deleted_node;
 
     cout << "\r\nUnsorted List =======================" << endl;
     sLList->printList();
 
-    sLList->BubbleSort(&AlphaBethSorting);
-    cout << "\r\nAlphabetically Sorted List with sorted by BubbleSort==========" << endl;
+    sLList->GnomeSort(&AlphaBethSorting);
+    cout << "\r\nAlphabetically Sorted List with sorted by GnomeSort==========" << endl;
     sLList->printList();
 
-    sLList->SelectionSort(&iAlphaBethSorting);
-    cout << "\r\nInverse Alphabetically Sorted List with sorted by SelectionSort==========" << endl;
-    sLList->printList();
+    //sLList->BubbleSort(&AlphaBethSorting);
+    //cout << "\r\nAlphabetically Sorted List with sorted by BubbleSort==========" << endl;
+    //sLList->printList();
 
-    sLList->InsertionSort(&AlphaBethSorting);
-    cout << "\r\nAlphabetically Sorted List with sorted by InsertionSort==========" << endl;
-    sLList->printList();
+    //sLList->SelectionSort(&iAlphaBethSorting);
+    //cout << "\r\nInverse Alphabetically Sorted List with sorted by SelectionSort==========" << endl;
+    //sLList->printList();
 
-    NodeClass<char*> *node = NULL;
-    node = sLList->findNode(4);
-    if (node != NULL){
+    //sLList->InsertionSort(&AlphaBethSorting);
+    //cout << "\r\nAlphabetically Sorted List with sorted by InsertionSort==========" << endl;
+    //sLList->printList();
+
+    NodeClass<char*> found_node = sLList->getNode(400);
+    if (found_node.getData() != NULL){
         cout << "\r\nNode found - ";
-        node->PrintNode();
-    }else {
-        cout << "\r\nNode not found" << endl;
+        found_node.PrintNode();
     }
+    delete &found_node;
+
+    DLLNodeClass<char*> *node = new DLLNodeClass<char*> (0,0,NULL,NULL);
 
     return a.exec();
 }

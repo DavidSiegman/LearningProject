@@ -3,8 +3,6 @@
 
 #include <iostream>
 #include <stdio.h>
-//#include <stdlib.h>
-//#include <cstdlib>
 #include <string.h>
 
 using namespace std;
@@ -18,6 +16,7 @@ template <typename T>
 class NodeClass{
 public:
     NodeClass(int, T, NodeClass<T>*);
+    NodeClass(int, T, NodeClass<T>*,NodeClass<T>*);
     ~NodeClass();
     void PrintNode();
     T getData(void);
@@ -36,6 +35,15 @@ private:
 template <typename T>
 NodeClass<T>::NodeClass(int key, T data,
                         NodeClass<T>* next){
+    this->key  = key;
+    this->data = data;
+    this->next = next;
+}
+// ====================================================
+// Node Class constructor =============================
+template <typename T>
+NodeClass<T>::NodeClass(int key, T data,
+                        NodeClass<T>* next,NodeClass<T>* prev){
     this->key  = key;
     this->data = data;
     this->next = next;
@@ -97,5 +105,4 @@ void NodeClass<char*>::PrintNode(){
     printf("Key: %d, Data: %s",
            this->key,this->data);
 }
-
 #endif // NODECLASS_H

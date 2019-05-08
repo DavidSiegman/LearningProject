@@ -25,13 +25,17 @@ public:
     NodeClass<T> deleteFromHead();
     NodeClass<T> deleteFromTail();
     NodeClass<T> deleteNode(int key);
-    NodeClass<T>* findNode(int key);
+    NodeClass<T> getNode(int key);
 
     void BubbleSort(bool (*SortingCondition)
                    (T preNodeData,T currNodeData));
     void SelectionSort(bool (*SortingCondition)
                    (T preNodeData,T currNodeData));
     void InsertionSort(bool (*SortingCondition)
+                   (T preNodeData,T currNodeData));
+    void GnomeSort(bool (*SortingCondition)
+                   (T preNodeData,T currNodeData));
+    void QuickSort(bool (*SortingCondition)
                    (T preNodeData,T currNodeData));
 
 private:
@@ -90,7 +94,10 @@ NodeClass<T> LinkedListClass<T>::deleteFromHead(){
         }
         return tempNode;
     }catch(int x) {
-        cout << "\r\nDelete error: head pointer is NULL" << endl;
+        cout << "\r\nDelete error: "
+                "head pointer is NULL" << endl;
+        NodeClass<T> *node = new NodeClass<T> (0, 0, NULL);
+        return *node;
     }
 }
 // ====================================================
@@ -120,7 +127,10 @@ NodeClass<T> LinkedListClass<T>::deleteFromTail(){
         this->tail = preTail;
         return tempNode;
     }catch(int x) {
-        cout << "\r\nDelete error: tail pointer is NULL" << endl;
+        cout << "\r\nDelete error: "
+                "tail pointer is NULL" << endl;
+        NodeClass<T> *node = new NodeClass<T> (0, 0, NULL);
+        return *node;
     }
 }
 // ====================================================
@@ -152,11 +162,15 @@ NodeClass<T> LinkedListClass<T>::deleteNode(int key){
         return result;
     }catch(int x) {
         if (x == 0){
-            cout << "\r\nDelete error: head pointer is NULL" << endl;
+            cout << "\r\nDelete error: "
+                    "head pointer is NULL" << endl;
         }
         if (x == 1){
-            cout << "\r\nDelete error: key wasn't found" << endl;
+            cout << "\r\nDelete error: "
+                    "key wasn't found" << endl;
         }
+        NodeClass<T> *node = new NodeClass<T> (0, 0, NULL);
+        return *node;
     }
 }
 // ====================================================
@@ -178,21 +192,36 @@ int LinkedListClass<T>::length(){
    return result;
 }
 // ====================================================
-// Find node by the key ===============================
+// Get node by the key ================================
 template <typename T>
-NodeClass<T>* LinkedListClass<T>::findNode(int key){
-   if(this->head == NULL){
-      return NULL;
-   }
-   NodeClass<T> *current = this->head;
-   while(current->getKey() != key){
-      if(current->getPtrNext() == NULL){
-         return NULL;
-      }else{
-         current = current->getPtrNext();
-      }
-   }
-   return current;
+NodeClass<T> LinkedListClass<T>::getNode(int key){
+    try{
+       if(this->head == NULL) {
+           throw 0;
+       }
+       NodeClass<T> *current = this->head;
+       while(current->getKey() != key){
+          if(current->getPtrNext() == NULL){
+             throw 1;
+          }else{
+             current = current->getPtrNext();
+          }
+       }
+       NodeClass<T> result = *current;
+       return result;
+    }catch(int x) {
+        if (x == 0){
+            cout << "\r\ngetNode: "
+                    "head pointer is NULL" << endl;
+        }
+        if (x == 1){
+            cout << "\r\ngetNode: "
+                    "key wasn't found" << endl;
+        }
+        NodeClass<char*> *node =
+                new NodeClass<char*> (0, NULL, NULL);
+        return *node;
+    }
 }
 // ====================================================
 // Display the liste ==================================
@@ -251,7 +280,8 @@ void LinkedListClass<T>::BubbleSort(
         }
     }catch(int x) {
         if (x == 0){
-            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
+            cout << "\r\nBubble Sort: "
+                    "head pointer is NULL" << endl;
         }
     }
 }
@@ -299,7 +329,8 @@ void LinkedListClass<T>::SelectionSort(
         }
     }catch(int x) {
         if (x == 0){
-            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
+            cout << "\r\nBubble Sort: "
+                    "head pointer is NULL" << endl;
         }
     }
 }
@@ -325,12 +356,14 @@ void LinkedListClass<T>::InsertionSort(
 
             NodeClass<T> *preSortedCurrent = this->head;
             NodeClass<T> *SortedCurrent    = this->head;
-            NodeClass<T> *Current = SortedAreaTail->getPtrNext();
+            NodeClass<T> *Current =
+                    SortedAreaTail->getPtrNext();
 
             for(i = 0; i < sorted_nodes; i++){
                 if(SortingCondition(SortedCurrent->getData(),
                                     Current->getData())){
-                    SortedAreaTail->setPtrNext(Current->getPtrNext());
+                    SortedAreaTail->setPtrNext(
+                                Current->getPtrNext());
                     if (SortedCurrent != this->head){
                         preSortedCurrent->setPtrNext(Current);
                         Current->setPtrNext(SortedCurrent);
@@ -344,7 +377,8 @@ void LinkedListClass<T>::InsertionSort(
                       SortedAreaTail = Current;
                     }else{
                       preSortedCurrent = SortedCurrent;
-                      SortedCurrent = SortedCurrent->getPtrNext();
+                      SortedCurrent =
+                              SortedCurrent->getPtrNext();
                     }
                 }
             }
@@ -352,10 +386,48 @@ void LinkedListClass<T>::InsertionSort(
             unsorted_nodes--;
         }
 
-
     }catch(int x) {
         if (x == 0){
-            cout << "\r\nBubble Sort: head pointer is NULL" << endl;
+            cout << "\r\nBubble Sort: "
+                    "head pointer is NULL" << endl;
+        }
+    }
+}
+// ====================================================
+// Gnome Sort sorting algorithm =======================
+template<typename T>
+void LinkedListClass<T>::GnomeSort(
+    bool (*const SortingCondition)(T preNodeData,
+                                   T currNodeData)){
+    try{
+        if(this->head == NULL) {
+           throw 0;
+        }
+        int i, tempKey;
+        T             tempData;
+        NodeClass<T> *preCurrent = this->head;
+        NodeClass<T> *Current    = this->head;
+
+        while(Current->getPtrNext() != NULL){
+            preCurrent = Current;
+            Current = Current->getPtrNext();
+            if(SortingCondition(preCurrent->getData(),
+                                Current->getData())){
+                tempData = preCurrent->getData();
+                preCurrent->setData(Current->getData());
+                Current->setData(tempData);
+                tempKey = preCurrent->getKey();
+                preCurrent->setKey(Current->getKey());
+                Current->setKey(tempKey);
+
+                preCurrent = this->head;
+                Current    = this->head;
+            }
+        }
+    }catch(int x) {
+        if (x == 0){
+           cout << "\r\nBubble Sort: "
+                   "head pointer is NULL" << endl;
         }
     }
 }
