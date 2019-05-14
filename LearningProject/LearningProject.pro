@@ -14,7 +14,9 @@ SOURCES += main.cpp \
 
 HEADERS += \
     LinkedListClass/linkedlistclass.h \
-    LinkedListClass/nodeclass.h \
+    LinkedListClass/llnodeclass.h \
     SortingConditions/sortingconditions.h \
     DoubleLinkedListClass/doublelinkedlistclass.h \
-    DoubleLinkedListClass/dllnodeclass.h
+    DoubleLinkedListClass/dllnodeclass.h \
+    ListClass/listclass.h \
+    NodeClass/nodeclass.h

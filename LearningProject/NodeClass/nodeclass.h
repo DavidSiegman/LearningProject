@@ -3,55 +3,33 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <cstdlib>
+#include <stdlib.h>
 #include <string.h>
 
 using namespace std;
-// ====================================================
-// Node Class Implementation ==========================
-// ========================================= Voronin.IV
 
 // ====================================================
 // Node Class declaration =============================
 template <typename T>
 class NodeClass{
 public:
-    NodeClass(int, T, NodeClass<T>*);
-    NodeClass(int, T, NodeClass<T>*,NodeClass<T>*);
-    ~NodeClass();
+    NodeClass();
+    ~NodeClass(){}
     void PrintNode();
     T getData(void);
     void setData(T);
     int getKey(void);
     void setKey(int);
-    void setPtrNext(NodeClass<T>*);
-    NodeClass<T>* getPtrNext();
 private:
-    T             data;
     int           key;
-    NodeClass<T> *next;
+    T             data;
 };
 // ====================================================
 // Node Class constructor =============================
 template <typename T>
-NodeClass<T>::NodeClass(int key, T data,
-                        NodeClass<T>* next){
-    this->key  = key;
-    this->data = data;
-    this->next = next;
+NodeClass<T>::NodeClass(){
 }
-// ====================================================
-// Node Class constructor =============================
-template <typename T>
-NodeClass<T>::NodeClass(int key, T data,
-                        NodeClass<T>* next,NodeClass<T>* prev){
-    this->key  = key;
-    this->data = data;
-    this->next = next;
-}
-// ====================================================
-// Node Class destructor ==============================
-template <typename T>
-NodeClass<T>::~NodeClass(){}
 // ====================================================
 // Get the node data ===================================
 template <typename T>
@@ -77,32 +55,20 @@ void NodeClass<T>::setKey(int new_key){
     this->key = new_key;
 }
 // ====================================================
-// Get pointer to next node ===========================
-template <typename T>
-NodeClass<T>* NodeClass<T>::getPtrNext(){
-    return this->next;
-}
-// ====================================================
-// Set pointer to next node ===========================
-template <typename T>
-void NodeClass<T>::setPtrNext(NodeClass<T>* new_next){
-    this->next = new_next;
-}
-// ====================================================
 // Display the node ===================================
 template <typename T>
 void NodeClass<T>::PrintNode(){
     printf("Key: %d, Data: %d",
-           this->key,this->data);
+           this->getKey(),this->getData());
 }
 template <>
 void NodeClass<double>::PrintNode(){
     printf("Key: %d, Data %2.2f",
-           this->key,this->data);
+           this->getKey(),this->getData());
 }
 template <>
 void NodeClass<char*>::PrintNode(){
     printf("Key: %d, Data: %s",
-           this->key,this->data);
+           this->getKey(),this->getData());
 }
 #endif // NODECLASS_H
